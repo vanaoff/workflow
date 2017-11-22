@@ -1,0 +1,26 @@
+- hosts: local
+  tasks:
+    - name: cleaning the repository
+      shell: ./setup.py clean --all
+      args:
+        chdir: '{{project_root}}'
+
+    - name: collecting to remove
+      find:
+        paths: '{{project_root}}'
+        recurse: yes
+        hidden: yes
+        file_type: directory
+        patterns:
+          - '.cache'
+          - '__pycache__'
+          - '.eggs'
+          - '*.egg-info'
+          - 'dist'
+      register: found
+
+    - name: removing collected
+      file:
+        path: '{{ item }}'
+        state: absent
+      with_items: '{{ found.files | map(attribute="path") | list }}'

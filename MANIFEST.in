@@ -1,0 +1,4 @@
+include versioneer.py
+include workflow/_version.py
+global-exclude *.pyc
+include workflow/log.yml

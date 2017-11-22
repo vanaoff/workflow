@@ -1,0 +1,26 @@
+disable_existing_loggers: false
+formatters:
+    simple:
+        format: '%(asctime)s : %(name)s : %(levelname)s : %(message)s'
+handlers:
+    console:
+        class: logging.StreamHandler
+        formatter: simple
+        level: INFO
+        stream: ext://sys.stdout
+loggers:
+    __main__:
+        handlers:
+        - console
+        level: INFO
+        propagate: false
+    azkaban:
+        handlers:
+        - console
+        level: INFO
+        propagate: false
+root:
+    handlers:
+    - console
+    level: WARNING
+version: 1

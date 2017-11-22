@@ -1,0 +1,22 @@
+properties:
+  failure.emails: myemail@email.io
+  user.to.proxy: me
+
+schedule:
+  addresses: '0 0 8,12,16,20,0 ? * *'
+
+jobs:
+  first_job:
+    command: bash first_job.sh
+    type: command
+    working.dir: ${azkaban.execution.dir}/first_job
+
+  depending_job:
+    command: bash depending_job.sh
+    dependencies: resolver
+    type: command
+    working.dir: ${azkaban.execution.dir}/depending_job
+
+  final:
+    dependencies: depending_job
+    type: noop

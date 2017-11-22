@@ -1,0 +1,2 @@
+- include: clean.yml
+- include: install.yml
