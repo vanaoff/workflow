@@ -88,7 +88,7 @@ def build_project(session, dir, name=None, global_props=None, description=None, 
     if upload:
         existing = {project['projectName'] for project in session.get_projects()['projects']}
         if name not in existing:
-            logger.info("Project %s not in %. Creating.", name, existing)
+            logger.info("Project %s not in %s. Creating.", name, existing)
             session.create_project(name, description=description if description else name)
 
         if project.versioned_name.endswith('dirty') or \
@@ -116,8 +116,7 @@ def build_project(session, dir, name=None, global_props=None, description=None, 
 
 def build_many(session, root_dir, upload=False):
     try:
-        global_props_path = yml_read(path.join(root_dir, 'global.yml'))
-        global_props = yml_read(global_props_path)
+        global_props = yml_read(path.join(root_dir, 'global.yml'))
         logger.info('Loaded %s as global property dict.')
     except FileNotFoundError:
         global_props = dict()
