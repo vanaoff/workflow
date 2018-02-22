@@ -30,17 +30,28 @@ def get_parser():
     parser.add_argument('-d', '--projects', dest='projects',
                         help='Projects directory to be uploaded.', type=str)
     parser.add_argument('-a', '--alias', dest='alias',
-                        help='Alias for azkaban configuration (stored in ~/.azkabanrc)', type=str,
-                        default='zactverec')
+                        help='Alias for azkaban configuration (stored in ~/.azkabanrc)', type=str)
     parser.add_argument('-u', '--url', dest='url', help='Azkaban url.')
     parser.add_argument('-l', '--local', action='store_true', dest='local', help='Build zip instead of upload.')
     return parser
 
 
 def yml_read(file):
-    logger.info('Reading %s', file)
+    logger.debug('Reading %s', file)
     with open(file, 'r') as definition:
-        return yaml.load(definition)
+        loaded = yaml.load(definition)
+        return loaded if loaded is not None else dict()
+
+
+def read_global_props(root_dir):
+    global_props_path = path.join(root_dir, 'global.yml')
+    try:
+        global_props = yml_read(global_props_path)
+        logger.info('Loaded global property dict %s.', global_props_path)
+    except FileNotFoundError:
+        logger.info("Global property file %s doesn't exist.", global_props_path)
+        global_props = dict()
+    return global_props
 
 
 def repo_revision(dir):
@@ -62,21 +73,21 @@ def build_project(session, dir, name=None, global_props=None, description=None, 
 
     definition = yml_read(path.join(dir, 'project.yml'))
 
-    if not global_props:
-        try:
-            global_props_path = path.join(dir, os.pardir, 'global.yml')
-            global_props = yml_read(global_props_path)
-            logger.info('Loaded %s as global property dict.', global_props_path)
-        except FileNotFoundError:
-            global_props = dict()
+    if global_props is None:
+        global_props = read_global_props(path.join(dir, os.pardir))
 
     project.properties = global_props
 
-    for prop, value in definition.get('properties', dict()).items():
-        project.properties[prop] = value
+    properties = definition.get('properties')
 
-    for job_name, job_definition in definition.get('jobs', dict()).items():
-        project.add_job(job_name, Job(job_definition))
+    if type(properties) == dict:
+        for prop, value in properties.items():
+            project.properties[prop] = value
+
+    jobs = definition.get('jobs')
+    if type(jobs) == dict:
+        for job_name, job_definition in jobs.items():
+            project.add_job(job_name, Job(job_definition))
 
     for file in glob(path.join(dir, '**/*'), recursive=True):
         project.add_file(file, file.replace(dir, './'))
@@ -88,7 +99,7 @@ def build_project(session, dir, name=None, global_props=None, description=None, 
     if upload:
         existing = {project['projectName'] for project in session.get_projects()['projects']}
         if name not in existing:
-            logger.info("Project %s not in %s. Creating.", name, existing)
+            logger.info("Project %s doesn't exist. Creating.", name)
             session.create_project(name, description=description if description else name)
 
         if project.versioned_name.endswith('dirty') or \
@@ -115,20 +126,14 @@ def build_project(session, dir, name=None, global_props=None, description=None, 
 
 
 def build_many(session, root_dir, upload=False):
-    try:
-        global_props = yml_read(path.join(root_dir, 'global.yml'))
-        logger.info('Loaded %s as global property dict.')
-    except FileNotFoundError:
-        global_props = dict()
-
+    global_props = read_global_props(root_dir)
     for dir in glob(path.join(root_dir, '*/')):
-        logger.info('Preparing project %s.', dir)
         build_project(session, dir, global_props=global_props, upload=upload)
 
 
 def create_session(alias=None, url=None):
     if url:
-        return Session(url=config.url)
+        return Session(url=config.url, verify=False)
     elif alias:
         return Session.from_alias(config.alias)
 

@@ -17,7 +17,7 @@ loggers:
     azkaban:
         handlers:
         - console
-        level: INFO
+        level: WARN
         propagate: false
 root:
     handlers:
