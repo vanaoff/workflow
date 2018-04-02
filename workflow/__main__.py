@@ -63,7 +63,7 @@ def repo_revision(dir):
         return 'unversioned'
 
 
-def build_project(session, dir, name=None, global_props=None, description=None, upload=True):
+def build_project(dir, session=None, name=None, global_props=None, description=None, upload=False):
     if not name:
         name = path.basename(dir.rstrip('/')).split(path.sep)[-1]
 
@@ -121,7 +121,6 @@ def build_project(session, dir, name=None, global_props=None, description=None, 
                 logger.info('Rescheduling %s @ %s to %s.', flow, name, schedule)
                 session.unschedule_workflow(name, flow)
                 session.schedule_cron_workflow(name, flow, schedule)
-
     return project
 
 
@@ -137,13 +136,14 @@ def create_session(alias=None, url=None):
         return Session(url=config.url, verify=False)
     elif alias:
         return Session.from_alias(config.alias)
+    raise ValueError("Neither url or alias for azkaban configuration provided.")
 
 
 if __name__ == '__main__':
     config = get_parser().parse_args()
-    session = create_session(config.alias, config.url)
-    if session:
-        if config.project:
-            build_project(session, config.project, upload=not config.local)
-        elif config.projects:
-            build_many(session, config.projects, upload=not config.local)
+    session = None if config.local else create_session(config.alias, config.url)
+
+    if config.project:
+        build_project(config.project, session, upload=not config.local)
+    elif config.projects:
+        build_many(config.projects, session, upload=not config.local)
