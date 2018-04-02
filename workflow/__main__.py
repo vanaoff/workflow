@@ -126,6 +126,7 @@ def build_project(session, dir, name=None, global_props=None, description=None, 
 
 
 def build_many(session, root_dir, upload=False):
+    logger.info('Building all projects in %s', root_dir)
     global_props = read_global_props(root_dir)
     for dir in glob(path.join(root_dir, '*/')):
         build_project(session, dir, global_props=global_props, upload=upload)
