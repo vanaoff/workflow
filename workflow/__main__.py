@@ -64,7 +64,7 @@ def repo_revision(dir):
 
 
 def build_project(dir, session=None, name=None, global_props=None, description=None, upload=False):
-    if not name:
+    if name is None:
         name = path.basename(dir.rstrip('/')).split(path.sep)[-1]
 
     logger.info("Building project %s.", name)
@@ -124,11 +124,11 @@ def build_project(dir, session=None, name=None, global_props=None, description=N
     return project
 
 
-def build_many(session, root_dir, upload=False):
+def build_many(root_dir, session, upload=False):
     logger.info('Building all projects in %s', root_dir)
     global_props = read_global_props(root_dir)
     for dir in glob(path.join(root_dir, '*/')):
-        build_project(session, dir, global_props=global_props, upload=upload)
+        build_project(dir, session, global_props=global_props, upload=upload)
 
 
 def create_session(alias=None, url=None):
