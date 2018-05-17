@@ -9,7 +9,7 @@ handlers:
         level: INFO
         stream: ext://sys.stdout
 loggers:
-    __main__:
+    workflow:
         handlers:
         - console
         level: INFO

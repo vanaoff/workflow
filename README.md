@@ -22,14 +22,25 @@ url = https://user:P455w0rd@azkaban.domain.io:443
 Module could be run with `python -m workflow` with following parameters:
 
 ```
+usage: __main__.py [-h]
+                   (--project-dir PROJECT_DIR | --projects-root PROJECTS_ROOT)
+                   (--azkaban-alias AZKABAN_ALIAS | --azkaban-url AZKABAN_URL | --local)
+                   [--global-props-file GLOBAL_PROPS_FILE]
+
+Workflow builder and uploader.
+
+optional arguments:
   -h, --help            show this help message and exit
-  -p PROJECT, --project PROJECT
-                        Project to be uploaded.
-  -d PROJECTS, --projects PROJECTS
-                        Projects directory to be uploaded.
-  -a ALIAS, --alias ALIAS
+  --project-dir PROJECT_DIR
+                        Project directory to be built.
+  --projects-root PROJECTS_ROOT
+                        Directory containing multiple projects to be built.
+  --azkaban-alias AZKABAN_ALIAS
                         Alias for azkaban configuration (stored in
                         ~/.azkabanrc)
-  -u URL, --url URL     Azkaban url.
-  -l, --local           Build zip instead of upload.
+  --azkaban-url AZKABAN_URL
+  --local               Build zip instead of upload.
+  --global-props-file GLOBAL_PROPS_FILE
+                        Yaml file defining properties shared by all workflows
+                        in scope.
 ```
