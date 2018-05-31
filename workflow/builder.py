@@ -35,7 +35,7 @@ def schedule_flow(session, project_name, flow, schedule):
         session.schedule_cron_workflow(project_name, flow, schedule)
 
 
-def build_project(project_dir, project_name, global_props, project_props, jobs, version):
+def build_project(project_name, global_props, project_props, jobs, files, version):
     logger.info("Building project %s.", project_name)
 
     project = Project(project_name, root=os.curdir, version=version)
@@ -45,20 +45,37 @@ def build_project(project_dir, project_name, global_props, project_props, jobs, 
     for job_name, job_definition in jobs.items():
         project.add_job(job_name, Job(job_definition))
 
-    for file in glob(os.path.join(project_dir, '**/*'), recursive=True):
-        project.add_file(file, file.replace(project_dir, './'))
+    for file, target in files:
+        project.add_file(file, target)
     return project
 
 
-def process_project(project_dir, session, global_props, version):
-    definition = yml_read(os.path.join(project_dir, 'project.yml'))
-    project_name = definition.get('project_name', os.path.basename(project_dir.rstrip('/')).split(os.path.sep)[-1])
+def process_project(session, global_props, version, project_dir=None, project_file=None):
+    if project_dir:
+        project_file = os.path.join(project_dir, 'project.yml')
+        project_name_candidate = os.path.basename(project_dir.rstrip('/').split(os.path.sep)[-1])
+        files = [(file, file.replace(project_dir, './')) for file in
+                 glob(os.path.join(project_dir, '**/*'), recursive=True)]
+    else:
+        project_name_candidate = os.path.basename(project_file).rstrip('.yml')
+        files = []
+
+    definition = yml_read(project_file)
+    project_name = definition.get('project_name')
+    if project_name is None:
+        project_name = project_name_candidate
+
     project_props = definition.get('properties', dict())
     jobs = definition.get('jobs', dict())
-    description = definition.get('description', dict())
+    description = definition.get('description', project_name)
     schedules = definition.get('schedule', dict())
+    for file, targets in definition.get('files', dict()).items():
+        if type(targets == 'str'):
+            targets = [targets]
+        for target in targets:
+            files.append((file, target))
 
-    project = build_project(project_dir, project_name, global_props, project_props, jobs, version)
+    project = build_project(project_name, global_props, project_props, jobs, files, version)
 
     zipfile = '%s.zip' % project.versioned_name
     project.build(zipfile, overwrite=True)

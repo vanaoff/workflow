@@ -23,7 +23,7 @@ Module could be run with `python -m workflow` with following parameters:
 
 ```
 usage: __main__.py [-h]
-                   (--project-dir PROJECT_DIR | --projects-root PROJECTS_ROOT)
+                   (--definition DEFINITION | --project-dir PROJECT_DIR | --projects-root PROJECTS_ROOT)
                    (--azkaban-alias AZKABAN_ALIAS | --azkaban-url AZKABAN_URL | --local)
                    [--global-props-file GLOBAL_PROPS_FILE]
 
@@ -31,8 +31,12 @@ Workflow builder and uploader.
 
 optional arguments:
   -h, --help            show this help message and exit
+  --definition DEFINITION
+                        Project definition in file.
   --project-dir PROJECT_DIR
-                        Project directory to be built.
+                        Project directory to be built. The folder is supposed
+                        to contain project.yml. All files in directory are
+                        uploaded to Azkaban.
   --projects-root PROJECTS_ROOT
                         Directory containing multiple projects to be built.
   --azkaban-alias AZKABAN_ALIAS

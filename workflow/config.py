@@ -27,11 +27,14 @@ class Config:
         parser = ArgumentParser(description='Workflow builder and uploader.')
         project = parser.add_mutually_exclusive_group(required=True)
 
-        project.add_argument('--project-dir', help='Project directory to be built.')
+        project.add_argument('--definition', help='Project definition in file.')
+        project.add_argument('--project-dir', help='Project directory to be built. The folder is supposed to contain '
+                                                   'project.yml. All files in directory are uploaded to Azkaban.')
         project.add_argument('--projects-root', help='Directory containing multiple projects to be built.')
 
         azkaban_settings = parser.add_mutually_exclusive_group(required=True)
-        azkaban_settings.add_argument('--azkaban-alias', help='Alias for azkaban configuration (stored in ~/.azkabanrc)')
+        azkaban_settings.add_argument('--azkaban-alias',
+                                      help='Alias for azkaban configuration (stored in ~/.azkabanrc)')
         azkaban_settings.add_argument('--azkaban-url', )
         azkaban_settings.add_argument('--local', action='store_true', help='Build zip instead of upload.')
 
@@ -42,6 +45,10 @@ class Config:
     @property
     def many(self):
         return self.parsed.projects_root is not None
+
+    @property
+    def definition_only(self):
+        return self.parsed.definition is not None
 
     @property
     def root_dir(self):

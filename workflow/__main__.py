@@ -5,5 +5,8 @@ from workflow.config import Config
 if __name__ == '__main__':
     c = Config()
     logger.info('Azkaban Workflow Builder and Uploader version %s.' % __version__)
-    for project_dir in c.projects:
-        process_project(project_dir, c.session, c.global_props, c.repo_revision)
+    if c.definition_only:
+        process_project(c.session, c.global_props, c.repo_revision, project_file=c.parsed.project_file)
+    else:
+        for project_dir in c.projects:
+            process_project(c.session, c.global_props, c.repo_revision, project_dir=project_dir)
