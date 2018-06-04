@@ -32,6 +32,8 @@ class Config:
                                                    'project.yml. All files in directory are uploaded to Azkaban.')
         project.add_argument('--projects-root', help='Directory containing multiple projects to be built.')
 
+        project.add_argument('--version', default=None, help="Manual specification of deployed workflow version.")
+
         azkaban_settings = parser.add_mutually_exclusive_group(required=True)
         azkaban_settings.add_argument('--azkaban-alias',
                                       help='Alias for azkaban configuration (stored in ~/.azkabanrc)')
@@ -79,4 +81,10 @@ class Config:
             sha = repo.head.object.hexsha[:8]
             return sha if not repo.is_dirty() else '%s.%s' % (sha, DIRTY_POSTFIX)
         except git.exc.InvalidGitRepositoryError as e:
-            return 'unversioned'
+            pass
+
+    @property
+    def version(self):
+        return self.parsed.version \
+               or self.repo_revision \
+               or 'unversioned'
