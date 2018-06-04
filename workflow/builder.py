@@ -36,7 +36,7 @@ def schedule_flow(session, project_name, flow, schedule):
 
 
 def build_project(project_name, global_props, project_props, jobs, files, version):
-    logger.info("Building project %s.", project_name)
+    logger.info("Building workflow %s, version: %s.", project_name, version)
 
     project = Project(project_name, root=os.curdir, version=version)
     project.properties = global_props
