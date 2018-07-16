@@ -1,9 +1,11 @@
+description: my project two
+
 properties:
   failure.emails: myemail@email.io
   user.to.proxy: me
 
 schedule:
-  addresses: '0 0 8,12,16,20,0 ? * *'
+  my_flow: '0 0 8,12,16,20,0 ? * *'
 
 jobs:
   first_job:
@@ -13,10 +15,10 @@ jobs:
 
   depending_job:
     command: bash depending_job.sh
-    dependencies: resolver
+    dependencies: first_job
     type: command
     working.dir: ${azkaban.execution.dir}/depending_job
 
-  final:
+  my_flow:
     dependencies: depending_job
     type: noop
