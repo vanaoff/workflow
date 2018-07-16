@@ -1,7 +1,0 @@
-- import_playbook: clean.yml
-- hosts: local
-  tasks:
-    - name: build egg
-      shell: 'python {{ project_root }}/setup.py bdist_wheel'
-      args:
-        chdir: '{{ project_root }}'
