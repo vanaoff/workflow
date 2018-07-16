@@ -19,7 +19,7 @@ setup(
     license='MIT',
     author='Ivan Héda',
     author_email='ivan.heda@gmail.com',
-    install_requires=['azkaban', 'pyyaml', 'versioneer', 'gitpython'],
+    install_requires=['azkaban', 'pyyaml', 'gitpython'],
     setup_requires=['pytest-runner'],
     tests_require=['pytest']
 )
