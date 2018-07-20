@@ -32,7 +32,7 @@ class Config:
                                                    'project.yml. All files in directory are uploaded to Azkaban.')
         project.add_argument('--projects-root', help='Directory containing multiple projects to be built.')
 
-        project.add_argument('--version', default=None, help="Manual specification of deployed workflow version.")
+        parser.add_argument('--version', default=None, help="Manual specification of deployed workflow version.")
 
         azkaban_settings = parser.add_mutually_exclusive_group(required=True)
         azkaban_settings.add_argument('--azkaban-alias',
