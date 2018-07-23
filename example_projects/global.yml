@@ -1,2 +1,0 @@
-azkaban.home: /opt/azkaban
-azkaban.execution.dir: ${azkaban.home}/executions/${azkaban.flow.execid}

@@ -1,4 +1,4 @@
-# Workflow #
+`# Workflow #
 
 [AzkabanCLI](https://github.com/mtth/azkaban) wrapper for easier workflow definition.
 
@@ -8,43 +8,28 @@
 
 ### Usage ###
 
-Workflow definition structure: see `./example_projects/`
+Workflow definition example could be found in [`./example`](https://github.com/vanaoff/workflow/tree/master/example).
+Workflow could be built and uploaded by executing 
+```bash
+python -m workflow --definition project.yml --extra-properties extra.yml --files-to-upload files-i-need --azkaban-url https://user:P455w0rd@azkaban.domain.io:443
+```
+or equivalently
+```bash
+python -m workflow -d project.yml -e extra.yml -f files-i-need -u https://user:P455w0rd@azkaban.domain.io:443
+```
 
-Workflow package relies there exists `~/.azkabanrc` file with connection definitions
+It's convenient to create `~/.azkabanrc` file in your home directory in following structure:
 ```ini
 [azkaban]
 default.alias = one
 
 [alias.one]
 url = https://user:P455w0rd@azkaban.domain.io:443
-``` 
-
-Module could be run with `python -m workflow` with following parameters:
-
 ```
-usage: __main__.py [-h]
-                   (--definition DEFINITION | --project-dir PROJECT_DIR | --projects-root PROJECTS_ROOT)
-                   (--azkaban-alias AZKABAN_ALIAS | --azkaban-url AZKABAN_URL | --local)
-                   [--global-props-file GLOBAL_PROPS_FILE]
 
-Workflow builder and uploader.
+Once it's there, it's possible to reference azkaban connection url with `--alias`, resp. `-a`, argument. 
+For local build use `--local/-l`
+switch.
 
-optional arguments:
-  -h, --help            show this help message and exit
-  --definition DEFINITION
-                        Project definition in file.
-  --project-dir PROJECT_DIR
-                        Project directory to be built. The folder is supposed
-                        to contain project.yml. All files in directory are
-                        uploaded to Azkaban.
-  --projects-root PROJECTS_ROOT
-                        Directory containing multiple projects to be built.
-  --azkaban-alias AZKABAN_ALIAS
-                        Alias for azkaban configuration (stored in
-                        ~/.azkabanrc)
-  --azkaban-url AZKABAN_URL
-  --local               Build zip instead of upload.
-  --global-props-file GLOBAL_PROPS_FILE
-                        Yaml file defining properties shared by all workflows
-                        in scope.
-```
+All options could be printed with `python -m workflow -h`.
+

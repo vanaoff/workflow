@@ -1,4 +1,5 @@
-description: my project one
+name: project-one
+description: This is my project one ♡
 
 properties:
   failure.emails: myemail@email.io
@@ -11,13 +12,11 @@ jobs:
   first_job:
     command: bash first_job.sh
     type: command
-    working.dir: ${azkaban.execution.dir}/first_job
 
   depending_job:
     command: bash depending_job.sh
     dependencies: first_job
     type: command
-    working.dir: ${azkaban.execution.dir}/depending_job
 
   my_flow:
     dependencies: depending_job

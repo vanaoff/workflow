@@ -1,13 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import sys
 
 from setuptools import setup
 
 import versioneer
-
-if sys.version_info < (3, 5):
-    sys.exit('Sorry, Python < 3.5 is not supported')
 
 setup(
     name='workflow',
