@@ -41,9 +41,17 @@ def build_project(name, properties, extra_properties, jobs, files, version):
     project.properties = extra_properties
     project.properties.update(properties)
 
+    dependencies = set()
+
     for job_name, job_definition in jobs.items():
         logger.info('Adding job %s.', job_name)
+        job_dependencies = job_definition.get('dependencies')
+        if job_dependencies is not None:
+            dependencies.update([x.strip() for x in job_dependencies.split(',')])
         project.add_job(job_name, Job(job_definition))
+
+    for workflow in set(jobs.keys()).difference(dependencies):
+        logger.info('Created workflow %s.', workflow)
 
     for file, target in files:
         logger.info('Adding file %s as %s', file, target)
