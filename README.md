@@ -1,4 +1,4 @@
-`# Workflow #
+# Workflow #
 
 [AzkabanCLI](https://github.com/mtth/azkaban) wrapper for easier workflow definition.
 
@@ -18,18 +18,21 @@ or equivalently
 python -m workflow -d project.yml -e extra.yml -f files-i-need -u https://user:P455w0rd@azkaban.domain.io:443
 ```
 
-It's convenient to create `~/.azkabanrc` file in your home directory in following structure:
+It's convenient to create `~/.azkabanrc` file in your home directory with following structure:
 ```ini
-[azkaban]
-default.alias = one
-
 [alias.one]
 url = https://user:P455w0rd@azkaban.domain.io:443
+
+[alias.two]
+url = https://different-user:P455w0rd@azkaban.domain.io:443
 ```
 
-Once it's there, it's possible to reference azkaban connection url with `--alias`, resp. `-a`, argument. 
-For local build use `--local/-l`
-switch.
+Once it's available, it's possible to reference azkaban connection url with `--alias`, resp. `-a`, argument, so 
+previous example will become
+```bash
+python -m workflow -d project.yml -e extra.yml -f files-i-need -a one 
+``` 
+
+For local build use `--local/-l` switch.
 
 All options could be printed with `python -m workflow -h`.
-
