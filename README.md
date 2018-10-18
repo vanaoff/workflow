@@ -15,7 +15,7 @@ python -m workflow --definition project.yml --extra-properties extra.yml --files
 ```
 or equivalently
 ```bash
-python -m workflow -d project.yml -e extra.yml -f directory-with-needed-files -u https://user:P455w0rd@azkaban.domain.io:443
+python -m workflow -d project.yml -e extra.yml -f files-i-need -u https://user:P455w0rd@azkaban.domain.io:443
 ```
 
 It's convenient to create `~/.azkabanrc` file in your home directory with following structure:
