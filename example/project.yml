@@ -1,5 +1,5 @@
 name: project-one
-description: This is my project one ♡
+description: This is my project one.
 
 properties:
   failure.emails: myemail@email.io
