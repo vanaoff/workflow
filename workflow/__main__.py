@@ -12,4 +12,4 @@ dictConfig(yaml.load(resource_stream(__name__, 'log.yml')))
 if __name__ == '__main__':
     c = Config()
     logger.info('Azkaban Workflow Builder and Uploader version %s.' % __version__)
-    process_project(c.session, c.name, c.definition, c.extra_properties, c.version, c.files)
+    process_project(c.get_session(), c.name, c.definition, c.extra_properties, c.version, c.files)

@@ -17,6 +17,7 @@ def upload_project(session, name, zipfile, version, description):
     if version.endswith(DIRTY_POSTFIX):
         logger.warning('Uploading uncommitted version of workflow.')
 
+    logger.info('Uploading file %s to project %s.', zipfile, name)
     session.upload_project(name, zipfile)
 
 

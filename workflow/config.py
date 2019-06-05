@@ -54,11 +54,11 @@ class Config:
         candidate = os.path.basename(self.parsed.definition.rstrip('/').split(os.path.sep)[-1])
         return self.definition.get('name') or candidate
 
-    @property
-    def session(self):
-        if self.parsed.azkaban_url is not None:
-            return Session(url=self.parsed.azkaban_url, verify=True)
-        return Session.from_alias(self.parsed.azkaban_alias)
+    def get_session(self):
+        if not self.parsed.local:
+            if self.parsed.azkaban_url is not None:
+                return Session(url=self.parsed.azkaban_url, verify=True)
+            return Session.from_alias(self.parsed.azkaban_alias)
 
     @property
     def repo_revision(self):
